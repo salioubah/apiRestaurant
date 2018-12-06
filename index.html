@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+
+    <link rel="stylesheet" href="node_modules/vuetify/dist/vuetify.min.css">
+    <link rel="stylesheet" href="css/styles.css" />
+    <link
+      rel="stylesheet"
+      href="node_modules/bootstrap/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="node_modules/@fortawesome/fontawesome-free/css/all.min.css"
+    />
+
+    <title>Gestionnaire restaurants VueJS</title>
+  </head>
+
+  <body>
+    <div id="app">
+
+        <v-app>
+            <v-toolbar app>
+              <v-toolbar-title>Mes Restaurants</v-toolbar-title>
+            </v-toolbar>
+            <v-navigation-drawer app></v-navigation-drawer>
+            <v-content>
+              <v-container fluid>
+                
+                  <div class="row">
+                      <div class="col-8">
+                        <form v-on:submit="methodForm(event);">
+                          <div class="form-group">
+                            <label> Nom : </label>
+                            <input
+                              required
+                              class="form-control"
+                              name="nom"
+                              id="nom"
+                              type="text"
+                              v-model="name"
+                            />
+                          </div>
+              
+                          <div class="form-group">
+                            <label> Cuisine : </label>
+                            <input
+                              required
+                              class="form-control"
+                              name="cuisine"
+                              id="cuisine"
+                              type="text"
+                              v-model="cuisine"
+                            />
+                            <input type="hidden" name="ids" v-model="ids" id="ids" />
+                          </div>
+              
+                          <div class="form-group">
+                            <button class="form-control btn btn-success">Ajouter</button>
+                          </div>
+                        </form>
+                        <h1>nombre de restaurants : {{ nbreResto }}</h1>
+                      </div>
+                      <div class="col-4"></div>
+                    </div>
+              
+                    <div class="row">
+                      <div class="col-8">
+                        <div class="form-group">
+                          <label for="pagesize"
+                            ><h6>
+                              Nombre de restaurants par page :
+                              <span class="badge badge-pill badge-success">{{
+                                pagesize
+                              }}</span>
+                            </h6>
+                          </label>
+                          <input
+                            v-model="pagesize"
+                            v-on:change="getRestaurantsFromServer()"
+                            type="range"
+                            class="custom-range form-control"
+                            min="5"
+                            max="100"
+                            step="5"
+                            value="10"
+                            id="pagesize"
+                          />
+                        </div>
+                        <div class="form-group">
+                          <label for="name"><h6>Trier par nom de restaurant :</h6> </label>
+                          <input
+                            v-model="name"
+                            v-on:keypress="reload()"
+                            type="text"
+                            class="form-control"
+                            id="name"
+                          />
+                        </div>
+                      </div>
+                      <div class="col-4"></div>
+                    </div>
+              
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Nom</th>
+                          <th>Cuisine</th>
+                          <th colspan="2">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr class="bordureRouge" v-for="r,index in restaurants">
+                          <td>{{ r.name }}</td>
+                          <td>{{ r.cuisine }}</td>
+                          <td>
+                            <button
+                              class="btn btn-success"
+                              title="Modifier"
+                              v-on:click="getRestaurantById(r._id)"
+                              href=""
+                            >
+                              <i class="far fa-edit"></i>
+                            </button>
+                          </td>
+                          <td>
+                            <button
+                              class="btn btn-danger"
+                              title="Supprimer"
+                              v-on:click="supprimerRestaurant(r._id)"
+                              href=""
+                            >
+                              <i class="fas fa-trash-alt"></i>
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                      <tfoot>
+                        <tr>
+                          <th>Nom</th>
+                          <th>Cuisine</th>
+                          <th colspan="2">Action</th>
+                        </tr>
+                      </tfoot>
+                    </table>
+                    <button class="btn btn-danger" v-on:click="firstPage()">Première page</button>
+                    <button class="btn btn-primary" v-bind:disabled="precedentDisable()" v-on:click="precedent()">
+                      Précédent
+                    </button>
+                    <button
+                      class="btn btn-primary"
+                      v-bind:disabled="suivantDisable(nbreResto)"
+                      v-on:click="suivant(nbreResto)"
+                    >
+                      Sivant
+                    </button>
+                    <button class="btn btn-danger" v-on:click="lastPage()">Dernière Page</button>
+                  </div>
+
+              </v-container>
+            </v-content>
+            <v-footer></v-footer>
+          </v-app>
+
+    <script src="lib/vue.min.js"></script>
+    <script src="node_modules/vuetify/dist/vuetify.min.js"></script>
+    <script src="lib/lodash.min.js"></script>
+    <script src="js/script.js"></script>
+  </body>
+</html>
